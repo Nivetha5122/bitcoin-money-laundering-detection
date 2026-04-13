@@ -1,0 +1,250 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 600px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 100%;
+                 height: 600px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "id": "bc1z9m0ghr542w0ej3jgiecs84i9a5od4", "label": "bc1z9m0ghr542w0ej3jgiecs84i9a5od4", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1c7qmkxl32z4c9i316m2dji5l51psl6", "label": "bc1c7qmkxl32z4c9i316m2dji5l51psl6", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1q57z7qexx72nu859emibtzh31byen7", "label": "bc1q57z7qexx72nu859emibtzh31byen7", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc19hv8p1n2fxvswjh4og88lgvz3bgf16", "label": "bc19hv8p1n2fxvswjh4og88lgvz3bgf16", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1r3y8e7m93j41q2t29l65sk87k53lvw", "label": "bc1r3y8e7m93j41q2t29l65sk87k53lvw", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1lpyn1surxtfmpo64mqtbgwgps3o1pm", "label": "bc1lpyn1surxtfmpo64mqtbgwgps3o1pm", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1p4j2ymat52ihrpb4wnumqyua1lugzx", "label": "bc1p4j2ymat52ihrpb4wnumqyua1lugzx", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1ayry19rtqzz81m428r2gujmhw7rqfs", "label": "bc1ayry19rtqzz81m428r2gujmhw7rqfs", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1kk3i5co6z9iqvi57djixtwxnlihgg7", "label": "bc1kk3i5co6z9iqvi57djixtwxnlihgg7", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1bv0ek65c1ksbm9qb348v0srh3byp2l", "label": "bc1bv0ek65c1ksbm9qb348v0srh3byp2l", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1xud23sk12al70x633zz7r31o936cdi", "label": "bc1xud23sk12al70x633zz7r31o936cdi", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1r7fjuid4au61mfarejhgkom2tgwucd", "label": "bc1r7fjuid4au61mfarejhgkom2tgwucd", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1nn0h4628m4jce92irkskexbtqptnhk", "label": "bc1nn0h4628m4jce92irkskexbtqptnhk", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1zl3k9fq0co3akc2c3su527c9vby3t1", "label": "bc1zl3k9fq0co3akc2c3su527c9vby3t1", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1wqn1vn9ecz9zv8aoox5rsr673j202v", "label": "bc1wqn1vn9ecz9zv8aoox5rsr673j202v", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1m4ebt2xmemfglckd1h1zpa6zozcbuc", "label": "bc1m4ebt2xmemfglckd1h1zpa6zozcbuc", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1bwzp2u4tebixvfdrbr35of5gc6bt8b", "label": "bc1bwzp2u4tebixvfdrbr35of5gc6bt8b", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1kg9df1cgaive9nbhm4rw3qaip02i2h", "label": "bc1kg9df1cgaive9nbhm4rw3qaip02i2h", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1buc3lt6aw9fgb5xjlqtkfjmbmxtgj1", "label": "bc1buc3lt6aw9fgb5xjlqtkfjmbmxtgj1", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1f27hhqxq7uxil5cdnr1xqgtk7gqb39", "label": "bc1f27hhqxq7uxil5cdnr1xqgtk7gqb39", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1tlh61hpy5cg43n82f9hlxpw4ds0plk", "label": "bc1tlh61hpy5cg43n82f9hlxpw4ds0plk", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1mkzm5txnla7gwuwk99lf56a4vtysre", "label": "bc1mkzm5txnla7gwuwk99lf56a4vtysre", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1kwqrmgsxdh3p6tgn07w20idqmd2emz", "label": "bc1kwqrmgsxdh3p6tgn07w20idqmd2emz", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1b87rigxb9v7vub00u8veze9kp0kzp4", "label": "bc1b87rigxb9v7vub00u8veze9kp0kzp4", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1kfizrmwno7gioabyghq99jfujtw3jf", "label": "bc1kfizrmwno7gioabyghq99jfujtw3jf", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1n40jzk1lxz2g7dybh5vmwl8caof0ip", "label": "bc1n40jzk1lxz2g7dybh5vmwl8caof0ip", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1b4knnibt0h8bxfao49zx2idber3fm5", "label": "bc1b4knnibt0h8bxfao49zx2idber3fm5", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1x64uvdl6daxom6a3nclwpbxifr9p1u", "label": "bc1x64uvdl6daxom6a3nclwpbxifr9p1u", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc12m3iv5wdwxunuvfdwtsmjqieyrsgdf", "label": "bc12m3iv5wdwxunuvfdwtsmjqieyrsgdf", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1qjj7sopb0x5t9bhno9opkhfjt6mm28", "label": "bc1qjj7sopb0x5t9bhno9opkhfjt6mm28", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1qs0jhsvv6icxp5ghc3ekacnqx6s21f", "label": "bc1qs0jhsvv6icxp5ghc3ekacnqx6s21f", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1qh4el9x21fnshbz52x291nt3kt6ezi", "label": "bc1qh4el9x21fnshbz52x291nt3kt6ezi", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1cx0f9hbgoxyw4kvj16bctx61i1qdhv", "label": "bc1cx0f9hbgoxyw4kvj16bctx61i1qdhv", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1dhnycwhzw16fz19gbvhuy49e5oii2w", "label": "bc1dhnycwhzw16fz19gbvhuy49e5oii2w", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1jqo5e6oidtq9e76m1e1ptbsmch4g2p", "label": "bc1jqo5e6oidtq9e76m1e1ptbsmch4g2p", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1vi8frt10wnbsysz7engj1pbc4pb70w", "label": "bc1vi8frt10wnbsysz7engj1pbc4pb70w", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1gewyjcf1vnmwfdywsi7jqjjtrkens3", "label": "bc1gewyjcf1vnmwfdywsi7jqjjtrkens3", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1pfihr9evlb54iyulaw0v78bazrtur3", "label": "bc1pfihr9evlb54iyulaw0v78bazrtur3", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1542wa2szqrzdo4hqcgmftf9meit1gq", "label": "bc1542wa2szqrzdo4hqcgmftf9meit1gq", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1ffcfrcrxwkcekfqee860qqxq2en4we", "label": "bc1ffcfrcrxwkcekfqee860qqxq2en4we", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1cn6ow8t7y5eloe29vmg3agcasx2e6k", "label": "bc1cn6ow8t7y5eloe29vmg3agcasx2e6k", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1qsgp7v79pdgpimmi8ov8uut08trdik", "label": "bc1qsgp7v79pdgpimmi8ov8uut08trdik", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1q36t1l8zbhe1vezvfh07ul02u6cfc8", "label": "bc1q36t1l8zbhe1vezvfh07ul02u6cfc8", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc18a9dgqf2qzyyj9lkvnpogtss10wpe3", "label": "bc18a9dgqf2qzyyj9lkvnpogtss10wpe3", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1a3hugi3neurp18c7agdnysw230f73e", "label": "bc1a3hugi3neurp18c7agdnysw230f73e", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc19j0hrpq3log8r3p7bnhqdy8pbsboyn", "label": "bc19j0hrpq3log8r3p7bnhqdy8pbsboyn", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1n1vlmwr5njy44943zrrhriyxf5cqp9", "label": "bc1n1vlmwr5njy44943zrrhriyxf5cqp9", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc15wlprqhayfywn1u0jl0y790679d2rc", "label": "bc15wlprqhayfywn1u0jl0y790679d2rc", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1s3dzb564ukt47xe58t72y6q7pdoqxg", "label": "bc1s3dzb564ukt47xe58t72y6q7pdoqxg", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1trs5085o750h9fshzm9m7aiaw7j7yq", "label": "bc1trs5085o750h9fshzm9m7aiaw7j7yq", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc172dnhroxm7nk7un9t5g16786qn1ieb", "label": "bc172dnhroxm7nk7un9t5g16786qn1ieb", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1s6vo1n9dfeyappof8s5g162veorxgk", "label": "bc1s6vo1n9dfeyappof8s5g162veorxgk", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1b8eza7261mjdtyl1k0sxlggxyftwlu", "label": "bc1b8eza7261mjdtyl1k0sxlggxyftwlu", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1v3bamgq98yw6p5tk2dmqj8yrcjjqan", "label": "bc1v3bamgq98yw6p5tk2dmqj8yrcjjqan", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1rblaiajslid2kni1n2nnx7hwfi4zjo", "label": "bc1rblaiajslid2kni1n2nnx7hwfi4zjo", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1nztfq2ipgmjjwnwidfiy3lazlbg0id", "label": "bc1nztfq2ipgmjjwnwidfiy3lazlbg0id", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1hdzj0il8yaviqxkonwlfw35f11kdzs", "label": "bc1hdzj0il8yaviqxkonwlfw35f11kdzs", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1ppeb70jaxv0w4echqyki6lmkkpli1d", "label": "bc1ppeb70jaxv0w4echqyki6lmkkpli1d", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc13w3r3lf9ifvkan5j76dz7m77ymnm57", "label": "bc13w3r3lf9ifvkan5j76dz7m77ymnm57", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1xytoffqag9erfnv9iowhoq4sx3t127", "label": "bc1xytoffqag9erfnv9iowhoq4sx3t127", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc18l7conw9w5b8xcbswtkhntwhm09p0q", "label": "bc18l7conw9w5b8xcbswtkhntwhm09p0q", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1fp9o3dcyj6yuf2hwcjnk5ej2i0n3h8", "label": "bc1fp9o3dcyj6yuf2hwcjnk5ej2i0n3h8", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc19b8fq4nij3ju34g7xj3rwmsjn8ztr9", "label": "bc19b8fq4nij3ju34g7xj3rwmsjn8ztr9", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc10xtghoax24w5ohkfynuibph4bo3kq1", "label": "bc10xtghoax24w5ohkfynuibph4bo3kq1", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1t1hf27qh9v1z692g68nubxvkckinvo", "label": "bc1t1hf27qh9v1z692g68nubxvkckinvo", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1nrtanocsw6ivk2z9jvgg7b00wqpt5i", "label": "bc1nrtanocsw6ivk2z9jvgg7b00wqpt5i", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1itzeuvy3t9cor3ujho2szv04q037hq", "label": "bc1itzeuvy3t9cor3ujho2szv04q037hq", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1pr3lpjzlj0w0r7mxat75lmo09toe6g", "label": "bc1pr3lpjzlj0w0r7mxat75lmo09toe6g", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1lscxclkc6md5959g03j9fov8pw1axm", "label": "bc1lscxclkc6md5959g03j9fov8pw1axm", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1qxzcdl0h74aq51kvdwohhfkm3r5jat", "label": "bc1qxzcdl0h74aq51kvdwohhfkm3r5jat", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc15nepvahkmmmib3k0i7z7ysesvwwg4t", "label": "bc15nepvahkmmmib3k0i7z7ysesvwwg4t", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1yrm45an49qwd9euqqtka0j14ydh38n", "label": "bc1yrm45an49qwd9euqqtka0j14ydh38n", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1isndmmpb1chrx0u5etcspz05sma70j", "label": "bc1isndmmpb1chrx0u5etcspz05sma70j", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1gclu46nc0i9a0owkmejc2h7v4f3534", "label": "bc1gclu46nc0i9a0owkmejc2h7v4f3534", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc131bjkoozbvp09os0ebljlwsp2n0xd8", "label": "bc131bjkoozbvp09os0ebljlwsp2n0xd8", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1qpox5gbxn03g8a033qcaqr8d2co97u", "label": "bc1qpox5gbxn03g8a033qcaqr8d2co97u", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1q7xysfuwrmg0ttw6e51aeld1fhl6dv", "label": "bc1q7xysfuwrmg0ttw6e51aeld1fhl6dv", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1ztkza9g2jxjcx4erp3ghsi0dbrwhqq", "label": "bc1ztkza9g2jxjcx4erp3ghsi0dbrwhqq", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1izj8epdfswe47urx0pmo5qab0luvop", "label": "bc1izj8epdfswe47urx0pmo5qab0luvop", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1jovpg6xzrquv9o65ja8gqn7hcupsbv", "label": "bc1jovpg6xzrquv9o65ja8gqn7hcupsbv", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc189sirh8g191sdi3hd6ziwhtfdq6l0s", "label": "bc189sirh8g191sdi3hd6ziwhtfdq6l0s", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1hg0yz2rztq8eiv0oynwr0v4r6dk2b6", "label": "bc1hg0yz2rztq8eiv0oynwr0v4r6dk2b6", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1l0my2ls47orop37oyxgoyb4rz5dro9", "label": "bc1l0my2ls47orop37oyxgoyb4rz5dro9", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1lprcv6vu18iayb8sa16e45bm9ty24w", "label": "bc1lprcv6vu18iayb8sa16e45bm9ty24w", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc12nouffwws7r1e1c1uq34gpp834i3gp", "label": "bc12nouffwws7r1e1c1uq34gpp834i3gp", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1mk0xwfcep7f4l0ibwvllfbrjyseff9", "label": "bc1mk0xwfcep7f4l0ibwvllfbrjyseff9", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc17ocah0q1bkv9vfwxq4bweqaxmpdo34", "label": "bc17ocah0q1bkv9vfwxq4bweqaxmpdo34", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc177oq65jjvfrqutqveeuhxj47dmm4qj", "label": "bc177oq65jjvfrqutqveeuhxj47dmm4qj", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc150udgpima1lwdu344mns1a2rvmq5dg", "label": "bc150udgpima1lwdu344mns1a2rvmq5dg", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1gvkh4fzdvxs93rvodvzmjwl2h9nmr7", "label": "bc1gvkh4fzdvxs93rvodvzmjwl2h9nmr7", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc11o9z3qb2yu63oyuim1gh7wevw5dnad", "label": "bc11o9z3qb2yu63oyuim1gh7wevw5dnad", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc14fih845g17qjylld5ejka986nof55t", "label": "bc14fih845g17qjylld5ejka986nof55t", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc12hx2p3vuaw9ps0nna5w5t8a6um07ff", "label": "bc12hx2p3vuaw9ps0nna5w5t8a6um07ff", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1ycc6smqmx9l4rxk83w3jm4fm4vc5dy", "label": "bc1ycc6smqmx9l4rxk83w3jm4fm4vc5dy", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1d1xn7in9ckjolepfthyioez0sbnp8i", "label": "bc1d1xn7in9ckjolepfthyioez0sbnp8i", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1kgao4gqxu9r27plbe9ill5k79hmdwf", "label": "bc1kgao4gqxu9r27plbe9ill5k79hmdwf", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1cqyxa0ko82moac1fe4hzolrb3zmg3a", "label": "bc1cqyxa0ko82moac1fe4hzolrb3zmg3a", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1ezzesa8y8i9s0ya0dkehjuseeakzev", "label": "bc1ezzesa8y8i9s0ya0dkehjuseeakzev", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1c3xsjqj40ck6yvrchlm4h51ga156y6", "label": "bc1c3xsjqj40ck6yvrchlm4h51ga156y6", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1ud4s4i6cknqfp0phfzumbst95o3hp5", "label": "bc1ud4s4i6cknqfp0phfzumbst95o3hp5", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1h8b7m4ceo1z8ezob27ee94uai5nzm0", "label": "bc1h8b7m4ceo1z8ezob27ee94uai5nzm0", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1fw7u6q9gzg7zti5qefv2fcpk0yjos4", "label": "bc1fw7u6q9gzg7zti5qefv2fcpk0yjos4", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1mjvuqhnrsxy2ikrx8my320w5jqw6vp", "label": "bc1mjvuqhnrsxy2ikrx8my320w5jqw6vp", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc18737g6qqmkf1qwvv9pflk06qrfd74y", "label": "bc18737g6qqmkf1qwvv9pflk06qrfd74y", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1vg0pd5skyojiqe48m5zh4a3w054x0v", "label": "bc1vg0pd5skyojiqe48m5zh4a3w054x0v", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc160j97fgrhe0zu89l1ovurbapk4c8u5", "label": "bc160j97fgrhe0zu89l1ovurbapk4c8u5", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1wht41lboi10fq6amuf51hzf83lmsmj", "label": "bc1wht41lboi10fq6amuf51hzf83lmsmj", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1wwp2sf0p1saldir08lkzc50znhk0wi", "label": "bc1wwp2sf0p1saldir08lkzc50znhk0wi", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1vklbx9npyw4igxh3rajms3imexdgzm", "label": "bc1vklbx9npyw4igxh3rajms3imexdgzm", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1fvsr70dflwrqe1fytrnzy6tse1uatg", "label": "bc1fvsr70dflwrqe1fytrnzy6tse1uatg", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1kzxlgiw5ohym8b3ek74kfogsnlzbwc", "label": "bc1kzxlgiw5ohym8b3ek74kfogsnlzbwc", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1eigm88e2zh01b9vshe8vlozv7fpumr", "label": "bc1eigm88e2zh01b9vshe8vlozv7fpumr", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1m6oig3kvdapd7o3swqbye27n0bahdg", "label": "bc1m6oig3kvdapd7o3swqbye27n0bahdg", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1oxvm2kzeuimkp7pm3l0ewnxd0f3f0s", "label": "bc1oxvm2kzeuimkp7pm3l0ewnxd0f3f0s", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1hhgqsclnh4tifmft0p1qsrz7nj0kyx", "label": "bc1hhgqsclnh4tifmft0p1qsrz7nj0kyx", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc15sqjox3aodd8unbp3p2tmy04jxm7mj", "label": "bc15sqjox3aodd8unbp3p2tmy04jxm7mj", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1bsmip6cmnb488ucye9ht35lc8dnaz4", "label": "bc1bsmip6cmnb488ucye9ht35lc8dnaz4", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc10zfi87ptsb0tz2hrkvhqetlmzwe77p", "label": "bc10zfi87ptsb0tz2hrkvhqetlmzwe77p", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1k0n264n6xxei8x6vx669ex93u967oh", "label": "bc1k0n264n6xxei8x6vx669ex93u967oh", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1u5v35rapb0wicva0vk3v2726tpo5xd", "label": "bc1u5v35rapb0wicva0vk3v2726tpo5xd", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1ae4mxrg1uha959g5kab2yb0efxzd5u", "label": "bc1ae4mxrg1uha959g5kab2yb0efxzd5u", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1g7z7kbbnxz7hp5o3wxkn9ss3wz19ae", "label": "bc1g7z7kbbnxz7hp5o3wxkn9ss3wz19ae", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc149rq6kc2kzhmxwoy32czngcpn9577o", "label": "bc149rq6kc2kzhmxwoy32czngcpn9577o", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1krj5tkaxk3dd8ot9tbupduw3c1e5kz", "label": "bc1krj5tkaxk3dd8ot9tbupduw3c1e5kz", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc146jqy5kd5fd43iyic05vdhsjy88zuc", "label": "bc146jqy5kd5fd43iyic05vdhsjy88zuc", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1cgqwef6n2htypbe5svt3oxxwshh2hx", "label": "bc1cgqwef6n2htypbe5svt3oxxwshh2hx", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1z0sypo92bxj9yu8s2p8d0ijk1npnyo", "label": "bc1z0sypo92bxj9yu8s2p8d0ijk1npnyo", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc127w95psjiigjfsu3jin8mbicfxhovm", "label": "bc127w95psjiigjfsu3jin8mbicfxhovm", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1n6u30kb4cnqimlwnmm9qrgnfuevjm7", "label": "bc1n6u30kb4cnqimlwnmm9qrgnfuevjm7", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1wlj4kdsludjkiiv5ykqk61ivtihaf9", "label": "bc1wlj4kdsludjkiiv5ykqk61ivtihaf9", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1att3oktd7w7bh44ajp8uc74apfzbmp", "label": "bc1att3oktd7w7bh44ajp8uc74apfzbmp", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc17hw0l95c713lece8309mnzltf7yem9", "label": "bc17hw0l95c713lece8309mnzltf7yem9", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1rq6mp38w516s3b7prtnjxy8mqeoh3h", "label": "bc1rq6mp38w516s3b7prtnjxy8mqeoh3h", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc13ggy7s880kb6gtsqocrdiwr5wso37r", "label": "bc13ggy7s880kb6gtsqocrdiwr5wso37r", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc161vkym1erdymvctyoxo66j8u3kiptb", "label": "bc161vkym1erdymvctyoxo66j8u3kiptb", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc11sm1ozzp4nk3da3nphwdyqkynr5kth", "label": "bc11sm1ozzp4nk3da3nphwdyqkynr5kth", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1yd8cxv8uhk92r1r2x193ubxjeuttf7", "label": "bc1yd8cxv8uhk92r1r2x193ubxjeuttf7", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1por4gro094r8ca99i2lld4vb3txhxs", "label": "bc1por4gro094r8ca99i2lld4vb3txhxs", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1db0x3q8tamaupieoij3ddtjzwsjrb3", "label": "bc1db0x3q8tamaupieoij3ddtjzwsjrb3", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc19ixxjcjya7seeys94qn2h5xo79wud6", "label": "bc19ixxjcjya7seeys94qn2h5xo79wud6", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1kzgohr99y3ceb0apothsodt8y5tmee", "label": "bc1kzgohr99y3ceb0apothsodt8y5tmee", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1un0vawxu1ec1lemhjc7a0mdimtie2z", "label": "bc1un0vawxu1ec1lemhjc7a0mdimtie2z", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1h2b70vshjqwqyua4cj79kpktg694td", "label": "bc1h2b70vshjqwqyua4cj79kpktg694td", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1c8347u57797mb6cqutxslw7kmmn6qg", "label": "bc1c8347u57797mb6cqutxslw7kmmn6qg", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1px52v2t0755jx0voa6an2hpr0tktnf", "label": "bc1px52v2t0755jx0voa6an2hpr0tktnf", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1uy20td08zqudyyl6av1bh6iooe91xf", "label": "bc1uy20td08zqudyyl6av1bh6iooe91xf", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1bdjcpg6yp95wz5gtb4489qxp5tly2i", "label": "bc1bdjcpg6yp95wz5gtb4489qxp5tly2i", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1w0iplp1mcbvwfiw0i77n6nwm4yajls", "label": "bc1w0iplp1mcbvwfiw0i77n6nwm4yajls", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1fh3dxdv8191qs3d4lptctqsta1zeuk", "label": "bc1fh3dxdv8191qs3d4lptctqsta1zeuk", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc12n57axjoxv1e63lhjrvfwkjl6bujwr", "label": "bc12n57axjoxv1e63lhjrvfwkjl6bujwr", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1xxx5rshxls8oce6p0tbifp1aukueto", "label": "bc1xxx5rshxls8oce6p0tbifp1aukueto", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1wkmrd5lr0me0n699tsiekabicz4oja", "label": "bc1wkmrd5lr0me0n699tsiekabicz4oja", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc10jc7xwrpug5x2ahlkjmv46ou4ox8v7", "label": "bc10jc7xwrpug5x2ahlkjmv46ou4ox8v7", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1vzwjvhm3sxksr7yxxbniptyb1r3w1t", "label": "bc1vzwjvhm3sxksr7yxxbniptyb1r3w1t", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1uokchc6smba53gvqhx3ud5g4b26ktf", "label": "bc1uokchc6smba53gvqhx3ud5g4b26ktf", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc152d1i20p40er8gp2a4oqsdp2m2gqqk", "label": "bc152d1i20p40er8gp2a4oqsdp2m2gqqk", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1tbujb8tncrjzetbxosn72cijjw8wpw", "label": "bc1tbujb8tncrjzetbxosn72cijjw8wpw", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1v095l5q28iq13hsludknex0wsmf8a4", "label": "bc1v095l5q28iq13hsludknex0wsmf8a4", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1y6t9avg3up8ip0mnxj5yhxmhgpo1my", "label": "bc1y6t9avg3up8ip0mnxj5yhxmhgpo1my", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc13x1xha6ro8f7zn7i4uvl3uc58ngkv2", "label": "bc13x1xha6ro8f7zn7i4uvl3uc58ngkv2", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1vqysep9uung7kvz09qtqgx3ey4hzqf", "label": "bc1vqysep9uung7kvz09qtqgx3ey4hzqf", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc114kz3e5kt34cf890p2e518b8q5yc5x", "label": "bc114kz3e5kt34cf890p2e518b8q5yc5x", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc10xbsi97vh1tq2s6pd4g9tec2j9injj", "label": "bc10xbsi97vh1tq2s6pd4g9tec2j9injj", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc16iuf9clwoayshnt88mgm7ds13put01", "label": "bc16iuf9clwoayshnt88mgm7ds13put01", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1y3ffsu9jj2xjytv4whwypex0ynvxo2", "label": "bc1y3ffsu9jj2xjytv4whwypex0ynvxo2", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1q10ysc7iryx9krbn43f8pb7ug4sxqa", "label": "bc1q10ysc7iryx9krbn43f8pb7ug4sxqa", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc18x25g5exjfj1kgmoifxb4vz4nj3dn5", "label": "bc18x25g5exjfj1kgmoifxb4vz4nj3dn5", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1mosyplscq58wjjt7kpyurd3kg678ew", "label": "bc1mosyplscq58wjjt7kpyurd3kg678ew", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1yxmrrfgi7v630wivkxzu4nl003m1im", "label": "bc1yxmrrfgi7v630wivkxzu4nl003m1im", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1lj2ozc5af0fqricyv6xlgr5z95z0ab", "label": "bc1lj2ozc5af0fqricyv6xlgr5z95z0ab", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1lkbkbbgdto2i46rewdf8qy39ebin11", "label": "bc1lkbkbbgdto2i46rewdf8qy39ebin11", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1kuy2qzqqt0bjtqznl0cbj0j482ax24", "label": "bc1kuy2qzqqt0bjtqznl0cbj0j482ax24", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc14zhfm9l3c3j8ifagup8ai17fvuys7f", "label": "bc14zhfm9l3c3j8ifagup8ai17fvuys7f", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1t6n6c7txvkssd4oeu3rsqqadrswreq", "label": "bc1t6n6c7txvkssd4oeu3rsqqadrswreq", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1hc829i2jp4cyvmo5ydgjn7cpogss57", "label": "bc1hc829i2jp4cyvmo5ydgjn7cpogss57", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1otfb893rt0q7iitqr8hfxnpkdc3m0b", "label": "bc1otfb893rt0q7iitqr8hfxnpkdc3m0b", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc11c3d77sl29lgilzbe2toau2pwi330q", "label": "bc11c3d77sl29lgilzbe2toau2pwi330q", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc1m6ub5qis5pxub3cban7ytio3uxt54k", "label": "bc1m6ub5qis5pxub3cban7ytio3uxt54k", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bc17uobpkk5pjr49ekkidpyzsscklox89", "label": "bc17uobpkk5pjr49ekkidpyzsscklox89", "shape": "dot", "size": 10}]);
+                  edges = new vis.DataSet([{"arrows": "to", "from": "bc1z9m0ghr542w0ej3jgiecs84i9a5od4", "to": "bc1c7qmkxl32z4c9i316m2dji5l51psl6", "width": 1}, {"arrows": "to", "from": "bc1q57z7qexx72nu859emibtzh31byen7", "to": "bc19hv8p1n2fxvswjh4og88lgvz3bgf16", "width": 1}, {"arrows": "to", "from": "bc1q57z7qexx72nu859emibtzh31byen7", "to": "bc1r3y8e7m93j41q2t29l65sk87k53lvw", "width": 1}, {"arrows": "to", "from": "bc1lpyn1surxtfmpo64mqtbgwgps3o1pm", "to": "bc1p4j2ymat52ihrpb4wnumqyua1lugzx", "width": 1}, {"arrows": "to", "from": "bc1lpyn1surxtfmpo64mqtbgwgps3o1pm", "to": "bc1ayry19rtqzz81m428r2gujmhw7rqfs", "width": 1}, {"arrows": "to", "from": "bc1lpyn1surxtfmpo64mqtbgwgps3o1pm", "to": "bc1kk3i5co6z9iqvi57djixtwxnlihgg7", "width": 1}, {"arrows": "to", "from": "bc1bv0ek65c1ksbm9qb348v0srh3byp2l", "to": "bc1xud23sk12al70x633zz7r31o936cdi", "width": 1}, {"arrows": "to", "from": "bc1bv0ek65c1ksbm9qb348v0srh3byp2l", "to": "bc1r7fjuid4au61mfarejhgkom2tgwucd", "width": 1}, {"arrows": "to", "from": "bc1bv0ek65c1ksbm9qb348v0srh3byp2l", "to": "bc1nn0h4628m4jce92irkskexbtqptnhk", "width": 1}, {"arrows": "to", "from": "bc1zl3k9fq0co3akc2c3su527c9vby3t1", "to": "bc1wqn1vn9ecz9zv8aoox5rsr673j202v", "width": 1}, {"arrows": "to", "from": "bc1zl3k9fq0co3akc2c3su527c9vby3t1", "to": "bc1m4ebt2xmemfglckd1h1zpa6zozcbuc", "width": 1}, {"arrows": "to", "from": "bc1zl3k9fq0co3akc2c3su527c9vby3t1", "to": "bc1bwzp2u4tebixvfdrbr35of5gc6bt8b", "width": 1}, {"arrows": "to", "from": "bc1zl3k9fq0co3akc2c3su527c9vby3t1", "to": "bc1kg9df1cgaive9nbhm4rw3qaip02i2h", "width": 1}, {"arrows": "to", "from": "bc1buc3lt6aw9fgb5xjlqtkfjmbmxtgj1", "to": "bc1f27hhqxq7uxil5cdnr1xqgtk7gqb39", "width": 1}, {"arrows": "to", "from": "bc1buc3lt6aw9fgb5xjlqtkfjmbmxtgj1", "to": "bc1tlh61hpy5cg43n82f9hlxpw4ds0plk", "width": 1}, {"arrows": "to", "from": "bc1mkzm5txnla7gwuwk99lf56a4vtysre", "to": "bc1kwqrmgsxdh3p6tgn07w20idqmd2emz", "width": 1}, {"arrows": "to", "from": "bc1mkzm5txnla7gwuwk99lf56a4vtysre", "to": "bc1b87rigxb9v7vub00u8veze9kp0kzp4", "width": 1}, {"arrows": "to", "from": "bc1mkzm5txnla7gwuwk99lf56a4vtysre", "to": "bc1kfizrmwno7gioabyghq99jfujtw3jf", "width": 1}, {"arrows": "to", "from": "bc1n40jzk1lxz2g7dybh5vmwl8caof0ip", "to": "bc1b4knnibt0h8bxfao49zx2idber3fm5", "width": 1}, {"arrows": "to", "from": "bc1n40jzk1lxz2g7dybh5vmwl8caof0ip", "to": "bc1x64uvdl6daxom6a3nclwpbxifr9p1u", "width": 1}, {"arrows": "to", "from": "bc1n40jzk1lxz2g7dybh5vmwl8caof0ip", "to": "bc12m3iv5wdwxunuvfdwtsmjqieyrsgdf", "width": 1}, {"arrows": "to", "from": "bc1qjj7sopb0x5t9bhno9opkhfjt6mm28", "to": "bc1qs0jhsvv6icxp5ghc3ekacnqx6s21f", "width": 1}, {"arrows": "to", "from": "bc1qh4el9x21fnshbz52x291nt3kt6ezi", "to": "bc1cx0f9hbgoxyw4kvj16bctx61i1qdhv", "width": 1}, {"arrows": "to", "from": "bc1dhnycwhzw16fz19gbvhuy49e5oii2w", "to": "bc1jqo5e6oidtq9e76m1e1ptbsmch4g2p", "width": 1}, {"arrows": "to", "from": "bc1dhnycwhzw16fz19gbvhuy49e5oii2w", "to": "bc1vi8frt10wnbsysz7engj1pbc4pb70w", "width": 1}, {"arrows": "to", "from": "bc1dhnycwhzw16fz19gbvhuy49e5oii2w", "to": "bc1gewyjcf1vnmwfdywsi7jqjjtrkens3", "width": 1}, {"arrows": "to", "from": "bc1pfihr9evlb54iyulaw0v78bazrtur3", "to": "bc1542wa2szqrzdo4hqcgmftf9meit1gq", "width": 1}, {"arrows": "to", "from": "bc1pfihr9evlb54iyulaw0v78bazrtur3", "to": "bc1ffcfrcrxwkcekfqee860qqxq2en4we", "width": 1}, {"arrows": "to", "from": "bc1pfihr9evlb54iyulaw0v78bazrtur3", "to": "bc1cn6ow8t7y5eloe29vmg3agcasx2e6k", "width": 1}, {"arrows": "to", "from": "bc1pfihr9evlb54iyulaw0v78bazrtur3", "to": "bc1qsgp7v79pdgpimmi8ov8uut08trdik", "width": 1}, {"arrows": "to", "from": "bc1q36t1l8zbhe1vezvfh07ul02u6cfc8", "to": "bc18a9dgqf2qzyyj9lkvnpogtss10wpe3", "width": 1}, {"arrows": "to", "from": "bc1q36t1l8zbhe1vezvfh07ul02u6cfc8", "to": "bc1a3hugi3neurp18c7agdnysw230f73e", "width": 1}, {"arrows": "to", "from": "bc1q36t1l8zbhe1vezvfh07ul02u6cfc8", "to": "bc19j0hrpq3log8r3p7bnhqdy8pbsboyn", "width": 1}, {"arrows": "to", "from": "bc1q36t1l8zbhe1vezvfh07ul02u6cfc8", "to": "bc1n1vlmwr5njy44943zrrhriyxf5cqp9", "width": 1}, {"arrows": "to", "from": "bc1q36t1l8zbhe1vezvfh07ul02u6cfc8", "to": "bc15wlprqhayfywn1u0jl0y790679d2rc", "width": 1}, {"arrows": "to", "from": "bc1s3dzb564ukt47xe58t72y6q7pdoqxg", "to": "bc1trs5085o750h9fshzm9m7aiaw7j7yq", "width": 1}, {"arrows": "to", "from": "bc1s3dzb564ukt47xe58t72y6q7pdoqxg", "to": "bc172dnhroxm7nk7un9t5g16786qn1ieb", "width": 1}, {"arrows": "to", "from": "bc1s3dzb564ukt47xe58t72y6q7pdoqxg", "to": "bc1s6vo1n9dfeyappof8s5g162veorxgk", "width": 1}, {"arrows": "to", "from": "bc1b8eza7261mjdtyl1k0sxlggxyftwlu", "to": "bc1v3bamgq98yw6p5tk2dmqj8yrcjjqan", "width": 1}, {"arrows": "to", "from": "bc1b8eza7261mjdtyl1k0sxlggxyftwlu", "to": "bc1rblaiajslid2kni1n2nnx7hwfi4zjo", "width": 1}, {"arrows": "to", "from": "bc1b8eza7261mjdtyl1k0sxlggxyftwlu", "to": "bc1nztfq2ipgmjjwnwidfiy3lazlbg0id", "width": 1}, {"arrows": "to", "from": "bc1b8eza7261mjdtyl1k0sxlggxyftwlu", "to": "bc1hdzj0il8yaviqxkonwlfw35f11kdzs", "width": 1}, {"arrows": "to", "from": "bc1ppeb70jaxv0w4echqyki6lmkkpli1d", "to": "bc13w3r3lf9ifvkan5j76dz7m77ymnm57", "width": 1}, {"arrows": "to", "from": "bc1ppeb70jaxv0w4echqyki6lmkkpli1d", "to": "bc1xytoffqag9erfnv9iowhoq4sx3t127", "width": 1}, {"arrows": "to", "from": "bc1ppeb70jaxv0w4echqyki6lmkkpli1d", "to": "bc18l7conw9w5b8xcbswtkhntwhm09p0q", "width": 1}, {"arrows": "to", "from": "bc1ppeb70jaxv0w4echqyki6lmkkpli1d", "to": "bc1fp9o3dcyj6yuf2hwcjnk5ej2i0n3h8", "width": 1}, {"arrows": "to", "from": "bc1ppeb70jaxv0w4echqyki6lmkkpli1d", "to": "bc19b8fq4nij3ju34g7xj3rwmsjn8ztr9", "width": 1}, {"arrows": "to", "from": "bc10xtghoax24w5ohkfynuibph4bo3kq1", "to": "bc1t1hf27qh9v1z692g68nubxvkckinvo", "width": 1}, {"arrows": "to", "from": "bc10xtghoax24w5ohkfynuibph4bo3kq1", "to": "bc1nrtanocsw6ivk2z9jvgg7b00wqpt5i", "width": 1}, {"arrows": "to", "from": "bc1itzeuvy3t9cor3ujho2szv04q037hq", "to": "bc1pr3lpjzlj0w0r7mxat75lmo09toe6g", "width": 1}, {"arrows": "to", "from": "bc1itzeuvy3t9cor3ujho2szv04q037hq", "to": "bc1lscxclkc6md5959g03j9fov8pw1axm", "width": 1}, {"arrows": "to", "from": "bc1qxzcdl0h74aq51kvdwohhfkm3r5jat", "to": "bc15nepvahkmmmib3k0i7z7ysesvwwg4t", "width": 1}, {"arrows": "to", "from": "bc1qxzcdl0h74aq51kvdwohhfkm3r5jat", "to": "bc1yrm45an49qwd9euqqtka0j14ydh38n", "width": 1}, {"arrows": "to", "from": "bc1isndmmpb1chrx0u5etcspz05sma70j", "to": "bc1gclu46nc0i9a0owkmejc2h7v4f3534", "width": 1}, {"arrows": "to", "from": "bc1isndmmpb1chrx0u5etcspz05sma70j", "to": "bc131bjkoozbvp09os0ebljlwsp2n0xd8", "width": 1}, {"arrows": "to", "from": "bc1qpox5gbxn03g8a033qcaqr8d2co97u", "to": "bc1q7xysfuwrmg0ttw6e51aeld1fhl6dv", "width": 1}, {"arrows": "to", "from": "bc1ztkza9g2jxjcx4erp3ghsi0dbrwhqq", "to": "bc1izj8epdfswe47urx0pmo5qab0luvop", "width": 1}, {"arrows": "to", "from": "bc1ztkza9g2jxjcx4erp3ghsi0dbrwhqq", "to": "bc1jovpg6xzrquv9o65ja8gqn7hcupsbv", "width": 1}, {"arrows": "to", "from": "bc189sirh8g191sdi3hd6ziwhtfdq6l0s", "to": "bc1hg0yz2rztq8eiv0oynwr0v4r6dk2b6", "width": 1}, {"arrows": "to", "from": "bc189sirh8g191sdi3hd6ziwhtfdq6l0s", "to": "bc1l0my2ls47orop37oyxgoyb4rz5dro9", "width": 1}, {"arrows": "to", "from": "bc189sirh8g191sdi3hd6ziwhtfdq6l0s", "to": "bc1lprcv6vu18iayb8sa16e45bm9ty24w", "width": 1}, {"arrows": "to", "from": "bc189sirh8g191sdi3hd6ziwhtfdq6l0s", "to": "bc12nouffwws7r1e1c1uq34gpp834i3gp", "width": 1}, {"arrows": "to", "from": "bc189sirh8g191sdi3hd6ziwhtfdq6l0s", "to": "bc1mk0xwfcep7f4l0ibwvllfbrjyseff9", "width": 1}, {"arrows": "to", "from": "bc17ocah0q1bkv9vfwxq4bweqaxmpdo34", "to": "bc177oq65jjvfrqutqveeuhxj47dmm4qj", "width": 1}, {"arrows": "to", "from": "bc17ocah0q1bkv9vfwxq4bweqaxmpdo34", "to": "bc150udgpima1lwdu344mns1a2rvmq5dg", "width": 1}, {"arrows": "to", "from": "bc17ocah0q1bkv9vfwxq4bweqaxmpdo34", "to": "bc1gvkh4fzdvxs93rvodvzmjwl2h9nmr7", "width": 1}, {"arrows": "to", "from": "bc17ocah0q1bkv9vfwxq4bweqaxmpdo34", "to": "bc11o9z3qb2yu63oyuim1gh7wevw5dnad", "width": 1}, {"arrows": "to", "from": "bc17ocah0q1bkv9vfwxq4bweqaxmpdo34", "to": "bc14fih845g17qjylld5ejka986nof55t", "width": 1}, {"arrows": "to", "from": "bc12hx2p3vuaw9ps0nna5w5t8a6um07ff", "to": "bc1ycc6smqmx9l4rxk83w3jm4fm4vc5dy", "width": 1}, {"arrows": "to", "from": "bc12hx2p3vuaw9ps0nna5w5t8a6um07ff", "to": "bc1d1xn7in9ckjolepfthyioez0sbnp8i", "width": 1}, {"arrows": "to", "from": "bc12hx2p3vuaw9ps0nna5w5t8a6um07ff", "to": "bc1kgao4gqxu9r27plbe9ill5k79hmdwf", "width": 1}, {"arrows": "to", "from": "bc12hx2p3vuaw9ps0nna5w5t8a6um07ff", "to": "bc1cqyxa0ko82moac1fe4hzolrb3zmg3a", "width": 1}, {"arrows": "to", "from": "bc1ezzesa8y8i9s0ya0dkehjuseeakzev", "to": "bc1c3xsjqj40ck6yvrchlm4h51ga156y6", "width": 1}, {"arrows": "to", "from": "bc1ezzesa8y8i9s0ya0dkehjuseeakzev", "to": "bc1ud4s4i6cknqfp0phfzumbst95o3hp5", "width": 1}, {"arrows": "to", "from": "bc1ezzesa8y8i9s0ya0dkehjuseeakzev", "to": "bc1h8b7m4ceo1z8ezob27ee94uai5nzm0", "width": 1}, {"arrows": "to", "from": "bc1ezzesa8y8i9s0ya0dkehjuseeakzev", "to": "bc1fw7u6q9gzg7zti5qefv2fcpk0yjos4", "width": 1}, {"arrows": "to", "from": "bc1ezzesa8y8i9s0ya0dkehjuseeakzev", "to": "bc1mjvuqhnrsxy2ikrx8my320w5jqw6vp", "width": 1}, {"arrows": "to", "from": "bc18737g6qqmkf1qwvv9pflk06qrfd74y", "to": "bc1vg0pd5skyojiqe48m5zh4a3w054x0v", "width": 1}, {"arrows": "to", "from": "bc18737g6qqmkf1qwvv9pflk06qrfd74y", "to": "bc160j97fgrhe0zu89l1ovurbapk4c8u5", "width": 1}, {"arrows": "to", "from": "bc18737g6qqmkf1qwvv9pflk06qrfd74y", "to": "bc1wht41lboi10fq6amuf51hzf83lmsmj", "width": 1}, {"arrows": "to", "from": "bc1wwp2sf0p1saldir08lkzc50znhk0wi", "to": "bc1vklbx9npyw4igxh3rajms3imexdgzm", "width": 1}, {"arrows": "to", "from": "bc1fvsr70dflwrqe1fytrnzy6tse1uatg", "to": "bc1kzxlgiw5ohym8b3ek74kfogsnlzbwc", "width": 1}, {"arrows": "to", "from": "bc1fvsr70dflwrqe1fytrnzy6tse1uatg", "to": "bc1eigm88e2zh01b9vshe8vlozv7fpumr", "width": 1}, {"arrows": "to", "from": "bc1fvsr70dflwrqe1fytrnzy6tse1uatg", "to": "bc1m6oig3kvdapd7o3swqbye27n0bahdg", "width": 1}, {"arrows": "to", "from": "bc1fvsr70dflwrqe1fytrnzy6tse1uatg", "to": "bc1oxvm2kzeuimkp7pm3l0ewnxd0f3f0s", "width": 1}, {"arrows": "to", "from": "bc1fvsr70dflwrqe1fytrnzy6tse1uatg", "to": "bc1hhgqsclnh4tifmft0p1qsrz7nj0kyx", "width": 1}, {"arrows": "to", "from": "bc15sqjox3aodd8unbp3p2tmy04jxm7mj", "to": "bc1bsmip6cmnb488ucye9ht35lc8dnaz4", "width": 1}, {"arrows": "to", "from": "bc15sqjox3aodd8unbp3p2tmy04jxm7mj", "to": "bc10zfi87ptsb0tz2hrkvhqetlmzwe77p", "width": 1}, {"arrows": "to", "from": "bc15sqjox3aodd8unbp3p2tmy04jxm7mj", "to": "bc1k0n264n6xxei8x6vx669ex93u967oh", "width": 1}, {"arrows": "to", "from": "bc15sqjox3aodd8unbp3p2tmy04jxm7mj", "to": "bc1u5v35rapb0wicva0vk3v2726tpo5xd", "width": 1}, {"arrows": "to", "from": "bc1ae4mxrg1uha959g5kab2yb0efxzd5u", "to": "bc1g7z7kbbnxz7hp5o3wxkn9ss3wz19ae", "width": 1}, {"arrows": "to", "from": "bc1ae4mxrg1uha959g5kab2yb0efxzd5u", "to": "bc149rq6kc2kzhmxwoy32czngcpn9577o", "width": 1}, {"arrows": "to", "from": "bc1krj5tkaxk3dd8ot9tbupduw3c1e5kz", "to": "bc146jqy5kd5fd43iyic05vdhsjy88zuc", "width": 1}, {"arrows": "to", "from": "bc1krj5tkaxk3dd8ot9tbupduw3c1e5kz", "to": "bc1cgqwef6n2htypbe5svt3oxxwshh2hx", "width": 1}, {"arrows": "to", "from": "bc1z0sypo92bxj9yu8s2p8d0ijk1npnyo", "to": "bc127w95psjiigjfsu3jin8mbicfxhovm", "width": 1}, {"arrows": "to", "from": "bc1z0sypo92bxj9yu8s2p8d0ijk1npnyo", "to": "bc1n6u30kb4cnqimlwnmm9qrgnfuevjm7", "width": 1}, {"arrows": "to", "from": "bc1z0sypo92bxj9yu8s2p8d0ijk1npnyo", "to": "bc1wlj4kdsludjkiiv5ykqk61ivtihaf9", "width": 1}, {"arrows": "to", "from": "bc1att3oktd7w7bh44ajp8uc74apfzbmp", "to": "bc17hw0l95c713lece8309mnzltf7yem9", "width": 1}, {"arrows": "to", "from": "bc1rq6mp38w516s3b7prtnjxy8mqeoh3h", "to": "bc13ggy7s880kb6gtsqocrdiwr5wso37r", "width": 1}, {"arrows": "to", "from": "bc1rq6mp38w516s3b7prtnjxy8mqeoh3h", "to": "bc161vkym1erdymvctyoxo66j8u3kiptb", "width": 1}, {"arrows": "to", "from": "bc1rq6mp38w516s3b7prtnjxy8mqeoh3h", "to": "bc11sm1ozzp4nk3da3nphwdyqkynr5kth", "width": 1}, {"arrows": "to", "from": "bc1rq6mp38w516s3b7prtnjxy8mqeoh3h", "to": "bc1yd8cxv8uhk92r1r2x193ubxjeuttf7", "width": 1}, {"arrows": "to", "from": "bc1por4gro094r8ca99i2lld4vb3txhxs", "to": "bc1db0x3q8tamaupieoij3ddtjzwsjrb3", "width": 1}, {"arrows": "to", "from": "bc1por4gro094r8ca99i2lld4vb3txhxs", "to": "bc19ixxjcjya7seeys94qn2h5xo79wud6", "width": 1}, {"arrows": "to", "from": "bc1por4gro094r8ca99i2lld4vb3txhxs", "to": "bc1kzgohr99y3ceb0apothsodt8y5tmee", "width": 1}, {"arrows": "to", "from": "bc1por4gro094r8ca99i2lld4vb3txhxs", "to": "bc1un0vawxu1ec1lemhjc7a0mdimtie2z", "width": 1}, {"arrows": "to", "from": "bc1h2b70vshjqwqyua4cj79kpktg694td", "to": "bc1c8347u57797mb6cqutxslw7kmmn6qg", "width": 1}, {"arrows": "to", "from": "bc1h2b70vshjqwqyua4cj79kpktg694td", "to": "bc1px52v2t0755jx0voa6an2hpr0tktnf", "width": 1}, {"arrows": "to", "from": "bc1h2b70vshjqwqyua4cj79kpktg694td", "to": "bc1uy20td08zqudyyl6av1bh6iooe91xf", "width": 1}, {"arrows": "to", "from": "bc1h2b70vshjqwqyua4cj79kpktg694td", "to": "bc1bdjcpg6yp95wz5gtb4489qxp5tly2i", "width": 1}, {"arrows": "to", "from": "bc1h2b70vshjqwqyua4cj79kpktg694td", "to": "bc1w0iplp1mcbvwfiw0i77n6nwm4yajls", "width": 1}, {"arrows": "to", "from": "bc1fh3dxdv8191qs3d4lptctqsta1zeuk", "to": "bc12n57axjoxv1e63lhjrvfwkjl6bujwr", "width": 1}, {"arrows": "to", "from": "bc1fh3dxdv8191qs3d4lptctqsta1zeuk", "to": "bc1xxx5rshxls8oce6p0tbifp1aukueto", "width": 1}, {"arrows": "to", "from": "bc1wkmrd5lr0me0n699tsiekabicz4oja", "to": "bc10jc7xwrpug5x2ahlkjmv46ou4ox8v7", "width": 1}, {"arrows": "to", "from": "bc1wkmrd5lr0me0n699tsiekabicz4oja", "to": "bc1vzwjvhm3sxksr7yxxbniptyb1r3w1t", "width": 1}, {"arrows": "to", "from": "bc1uokchc6smba53gvqhx3ud5g4b26ktf", "to": "bc152d1i20p40er8gp2a4oqsdp2m2gqqk", "width": 1}, {"arrows": "to", "from": "bc1uokchc6smba53gvqhx3ud5g4b26ktf", "to": "bc1tbujb8tncrjzetbxosn72cijjw8wpw", "width": 1}, {"arrows": "to", "from": "bc1uokchc6smba53gvqhx3ud5g4b26ktf", "to": "bc1v095l5q28iq13hsludknex0wsmf8a4", "width": 1}, {"arrows": "to", "from": "bc1y6t9avg3up8ip0mnxj5yhxmhgpo1my", "to": "bc13x1xha6ro8f7zn7i4uvl3uc58ngkv2", "width": 1}, {"arrows": "to", "from": "bc1y6t9avg3up8ip0mnxj5yhxmhgpo1my", "to": "bc1vqysep9uung7kvz09qtqgx3ey4hzqf", "width": 1}, {"arrows": "to", "from": "bc114kz3e5kt34cf890p2e518b8q5yc5x", "to": "bc10xbsi97vh1tq2s6pd4g9tec2j9injj", "width": 1}, {"arrows": "to", "from": "bc16iuf9clwoayshnt88mgm7ds13put01", "to": "bc1y3ffsu9jj2xjytv4whwypex0ynvxo2", "width": 1}, {"arrows": "to", "from": "bc1q10ysc7iryx9krbn43f8pb7ug4sxqa", "to": "bc18x25g5exjfj1kgmoifxb4vz4nj3dn5", "width": 1}, {"arrows": "to", "from": "bc1q10ysc7iryx9krbn43f8pb7ug4sxqa", "to": "bc1mosyplscq58wjjt7kpyurd3kg678ew", "width": 1}, {"arrows": "to", "from": "bc1q10ysc7iryx9krbn43f8pb7ug4sxqa", "to": "bc1yxmrrfgi7v630wivkxzu4nl003m1im", "width": 1}, {"arrows": "to", "from": "bc1q10ysc7iryx9krbn43f8pb7ug4sxqa", "to": "bc1lj2ozc5af0fqricyv6xlgr5z95z0ab", "width": 1}, {"arrows": "to", "from": "bc1lkbkbbgdto2i46rewdf8qy39ebin11", "to": "bc1kuy2qzqqt0bjtqznl0cbj0j482ax24", "width": 1}, {"arrows": "to", "from": "bc1lkbkbbgdto2i46rewdf8qy39ebin11", "to": "bc14zhfm9l3c3j8ifagup8ai17fvuys7f", "width": 1}, {"arrows": "to", "from": "bc1lkbkbbgdto2i46rewdf8qy39ebin11", "to": "bc1t6n6c7txvkssd4oeu3rsqqadrswreq", "width": 1}, {"arrows": "to", "from": "bc1lkbkbbgdto2i46rewdf8qy39ebin11", "to": "bc1hc829i2jp4cyvmo5ydgjn7cpogss57", "width": 1}, {"arrows": "to", "from": "bc1otfb893rt0q7iitqr8hfxnpkdc3m0b", "to": "bc11c3d77sl29lgilzbe2toau2pwi330q", "width": 1}, {"arrows": "to", "from": "bc1m6ub5qis5pxub3cban7ytio3uxt54k", "to": "bc17uobpkk5pjr49ekkidpyzsscklox89", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
