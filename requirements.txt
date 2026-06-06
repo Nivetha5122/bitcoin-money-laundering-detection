@@ -6,3 +6,4 @@ river
 networkx
 pyvis
 streamlit-lottie
+plotly
