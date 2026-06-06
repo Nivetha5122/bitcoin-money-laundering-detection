@@ -7,3 +7,6 @@ networkx
 pyvis
 streamlit-lottie
 plotly
+streamlit-option-menu
+streamlit-extras
+yfinance
